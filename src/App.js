@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { useState } from "react";
 import {
@@ -6,35 +5,34 @@ import {
   getDpsValue,
   getWeaponDamage,
 } from "./utilities/calculations";
+import ItemsList from "./components/ItemsList";
+import Weapon from "./components/Weapon";
 
 function App() {
-  const [weaponLevel, setWeaponLevel] = useState(1);
-  const weaponMinLevel = 1,
-    weaponMaxLevel = 7;
-  const [isWeaponLevelDownDisabled, setWeaponLevelDownDisabled] =
-    useState(true);
-  const [isWeaponLevelUpDisabled, setWeaponLevelUpDisabled] = useState(false);
-  const onWeaponLevelUp = () => {
-    setWeaponLevel(weaponLevel + 1);
-    setWeaponLevelDownDisabled(weaponLevel + 1 === weaponMinLevel);
-    setWeaponLevelUpDisabled(weaponLevel + 1 === weaponMaxLevel);
-  };
-  const onWeaponLevelDown = () => {
-    setWeaponLevel(weaponLevel - 1);
-    setWeaponLevelUpDisabled(weaponLevel - 1 === weaponMaxLevel);
-    setWeaponLevelDownDisabled(weaponLevel - 1 === weaponMinLevel);
-  };
+  const characterStats = {
+    hp: 50,
+    baseAtk: 10,
+    externalAtk: 100,
+    speed: 100,
+    anvilCount: 0,
+    weaponDmg: getWeaponDamage(),
+    growthBonus: 2,
+    critRate: 10,
+    critMultiplier: 150,
+    haste: 10,
+    hitNumberPerAttack: 4
+  }
   const hp = 50,
     baseAtk = 10,
     externalAtk = 100,
     speed = 100,
     anvilCount = 0,
-    weaponDmg = getWeaponDamage("weapon", weaponLevel),
+    weaponDmg = getWeaponDamage(),
     growthBonus = 2,
     critRate = 10,
     critMultiplier = 150,
     haste = 10,
-    baseHitPerSecond = 4;
+    hitNumberPerAttack = 4;
   return (
     <div className="App">
       <div>
@@ -49,44 +47,29 @@ function App() {
           <tbody>
             <tr>
               <td>HP</td>
-              <td>{hp}</td>
+              <td>{characterStats.hp}</td>
             </tr>
             <tr>
               <td>Attack</td>
-              <td>{externalAtk}%</td>
-            </tr>
-            <tr>
-              <td>Speed</td>
-              <td>{speed}%</td>
+              <td>{characterStats.externalAtk}%</td>
             </tr>
             <tr>
               <td>Haste</td>
-              <td>{haste}%</td>
+              <td>{characterStats.haste}%</td>
             </tr>
             <tr>
               <td>Crit Rate</td>
-              <td>{critRate}%</td>
+              <td>{characterStats.critRate}%</td>
             </tr>
             <tr>
               <td>Crit damage</td>
-              <td>{critMultiplier}%</td>
+              <td>{characterStats.critMultiplier}%</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div>
-        Weapon level{" "}
-        <button
-          disabled={isWeaponLevelDownDisabled}
-          onClick={onWeaponLevelDown}
-        >
-          -
-        </button>
-        <span> {weaponLevel} </span>
-        <button disabled={isWeaponLevelUpDisabled} onClick={onWeaponLevelUp}>
-          +
-        </button>
-      </div>
+      <Weapon></Weapon>
+      <ItemsList></ItemsList>
       <div>
         DPS:{" "}
         {getDpsValue(
@@ -100,8 +83,8 @@ function App() {
             critMultiplier
           ).average,
           haste,
-          baseHitPerSecond
-        ) || 100}
+          hitNumberPerAttack
+        ) || "Invalid"}
       </div>
     </div>
   );

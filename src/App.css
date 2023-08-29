@@ -40,3 +40,12 @@
 .stats-table {
   margin: auto;
 }
+
+.select {
+  width: 200px;
+  margin: auto;
+}
+
+.item-wrapper {
+  margin: 10px 0;
+}

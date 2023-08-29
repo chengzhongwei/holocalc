@@ -31,8 +31,8 @@ export function getDamageRange(
   return damageOutput;
 }
 
-export function getDpsValue(averageDamageOutput, haste, baseHitPerSecond) {
-  const dps = averageDamageOutput * baseHitPerSecond * (1 + haste * 0.01);
+export function getDpsValue(averageDamageOutput, haste, hitNumberPerAttack) {
+  const dps = averageDamageOutput * hitNumberPerAttack * (1 + haste * 0.01);
   return dps.toFixed(0);
 }
 
@@ -54,5 +54,5 @@ export function getWeaponDamage(name, level) {
       default:
         return 2;
     }
-  }
+  } else return 2
 }
