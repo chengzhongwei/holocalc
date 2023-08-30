@@ -3,7 +3,9 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import http from 'http';
+import cors from 'cors';
 
+import Weapon from './models/weapon.js';
 dotenv.config();
 
 const app = express();
@@ -13,10 +15,9 @@ app.use(bodyParser.json())
 const port = process.env.PORT || 8000;
 
 // Add cors to allow access from port
-import cors from 'cors';
 
 app.use(cors({
-  origin: `http://localhost:${port}`,
+  origin: `http://localhost:3000`,
   methods: ['GET', 'POST']
 }));
 
@@ -43,7 +44,21 @@ app.get('/', (req, res) => {
 });
 
 app.get('/weapon', (req, res) => {
-    res.send('foo');
+  Weapon.find(req.query.name ? { name: req.query.name } : {})
+    .then(weapons => res.json(weapons))
+    .catch(err => res.status(400).json('Error: ' + err));
+})
+
+app.post('/weapon', async (req, res) => {
+  const newWeapon = new Weapon(req.body);
+  console.log(newWeapon);
+  try {
+    const weapon = await newWeapon.save();
+    res.status(201).json(weapon);
+  }
+  catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 })
 
 // Create server listener
