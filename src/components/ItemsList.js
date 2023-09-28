@@ -3,18 +3,29 @@
 import Item from './Item'
 import { connect } from 'react-redux';
 import { addItem, deleteItem } from '../store/actions/itemActions';
+import { itemOptions } from '../Constants';
 
 const ItemsList = ({ items, addItem, deleteItem }) => {
-
   const handleAddItem = () => {
-    // For demonstration, let's just add a timestamp.
-    addItem(new Date().toISOString());
+    addItem({
+      index: items.length,
+      name: '',
+      label: '',
+      minLevel: 1,
+      maxLevel: 5,
+      level: 1,
+    });
   };
   return (
     <div>
-      <button onClick={handleAddItem}>Add Item</button>
-      {items.map((item, index) => {
-        return <div className='item-wrapper'><Item item={item}></Item><button value={index} onClick={() => deleteItem(index)}>Click Me</button></div>
+      <button onClick={handleAddItem} disabled={items.length === 6}>Add Item</button>
+      {items.map((item) => {
+        return (
+          <div className='item-wrapper'>
+            <Item item={item}></Item>
+            <button onClick={() => deleteItem(item.id)}>Delete</button>
+          </div>
+        )
       })}
     </div>
   )

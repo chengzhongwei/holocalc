@@ -1,44 +1,57 @@
-import { useState } from "react";
+import React from 'react';
+import { connect } from 'react-redux';
+import Select from 'react-select';
+import { increaseItemLevel, decreaseItemLevel, changeItem } from '../store/actions/itemActions';
+import { itemOptions } from '../Constants';
 
-import Select from 'react-select'
-const Item = (item) => {
-  const [itemLevel, setItemLevel] = useState(1);
+const Item = (props) => {
   const itemMinLevel = 1,
-    itemMaxLevel = 5;
-  const [isItemLevelDownDisabled, setItemLevelDownDisabled] =
-    useState(true);
-  const [isItemLevelUpDisabled, setItemLevelUpDisabled] = useState(false);
+        itemMaxLevel = 5;
+
   const onItemLevelUp = () => {
-    setItemLevel(itemLevel + 1);
-    setItemLevelDownDisabled(itemLevel + 1 === itemMinLevel);
-    setItemLevelUpDisabled(itemLevel + 1 === itemMaxLevel);
+    props.increaseLevel();
   };
+
   const onItemLevelDown = () => {
-    setItemLevel(itemLevel - 1);
-    setItemLevelUpDisabled(itemLevel - 1 === itemMaxLevel);
-    setItemLevelDownDisabled(itemLevel - 1 === itemMinLevel);
+    props.decreaseLevel();
   };
-  const itemOptions = [
-    { value: 'gorilla\'s paw', label: 'Gorilla\'s Paw' },
-    { value: 'membership', label: 'Membership' },
-    { value: 'face mask', label: 'Face Mask' }
-  ]
+  
+  const onItemChange = (selectedOption) => {
+    props.changeItem({ index: props.item.index, name: selectedOption.value, label: selectedOption.label });
+  };
+
   return (
     <div>
-      <div><Select className="select" options={itemOptions} placeholder="select an item"></Select></div>
-        Item level{" "}
-        <button
-          disabled={isItemLevelDownDisabled}
-          onClick={onItemLevelDown}
-        >
-          -
-        </button>
-        <span> {itemLevel} </span>
-        <button disabled={isItemLevelUpDisabled} onClick={onItemLevelUp}>
-          +
-        </button>
+      <div>
+        {props.item.label}
+        <Select
+          onChange={onItemChange}
+          className="select"
+          options={itemOptions}
+          placeholder="select an item"
+        />
       </div>
-  )
-}
+      Item level 
+      <button
+        disabled={props.item.level <= itemMinLevel}
+        onClick={onItemLevelDown}
+      >
+        -
+      </button>
+      <span> {props.item.level || 0} </span>
+      <button disabled={props.item.level >= itemMaxLevel} onClick={onItemLevelUp}>
+        +
+      </button>
+    </div>
+  );
+};
 
-export default Item;
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    increaseLevel: () => dispatch(increaseItemLevel(ownProps.item.index)),
+    decreaseLevel: () => dispatch(decreaseItemLevel(ownProps.item.index)),
+    changeItem: (item) => dispatch(changeItem(item))
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Item);
