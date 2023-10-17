@@ -7,8 +7,13 @@ import {
 } from "./utilities/calculations";
 import ItemsList from "./components/ItemsList";
 import Weapon from "./components/Weapon";
+import { CharacterSelect } from "./components/CharacterSelect";
 
 function App() {
+  
+  const characterChange = (character) => {
+
+  }
   const characterStats = {
     hp: 50,
     baseAtk: 10,
@@ -35,7 +40,12 @@ function App() {
     hitNumberPerAttack = 4;
   return (
     <div className="App">
+      <header>
+      <h1>HoloCalc</h1>
+      <h2>Holocure DPS Calculator</h2>
+      </header>
       <div>
+        <CharacterSelect characterChange={characterChange}></CharacterSelect>
         Character Stats
         <table className="stats-table">
           <thead>

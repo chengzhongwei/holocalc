@@ -49,3 +49,9 @@
 .item-wrapper {
   margin: 10px 0;
 }
+
+.character-select {
+  width: 300px;
+  margin: auto;
+  margin-bottom: 12px;
+}
